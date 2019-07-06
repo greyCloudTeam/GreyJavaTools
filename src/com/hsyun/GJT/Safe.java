@@ -1,5 +1,6 @@
 package com.hsyun.GJT;
 
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
@@ -9,11 +10,34 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
- * 此类提供各种加密方式，最后更新：2019-3-30
+ * 此类提供各种加密方式，最后更新：2019-7-6<br>
+ * 2019-7-6更新内容<br>
+ * 增加了urlEncode，暂不提供解密
  * @author caiwen
- * @version 0.1
+ * @version 0.2
  */
 public class Safe {
+	/**
+	 * 将文字，符号之类的加密，用在url里
+	 * @param str
+	 * 要加密的字符串
+	 * @return
+	 * 加密后的字符串
+	 * @throws UnsupportedEncodingException
+	 */
+	public static String urlEncode(String str) throws UnsupportedEncodingException {
+		StringBuilder sb=new StringBuilder();
+		byte[] utf8=str.getBytes("UTF-8");
+		for(byte b:utf8) {
+			//System.out.println(b);
+			String hexStr=Integer.toHexString(b);
+			String temp=hexStr.substring(hexStr.length()-2);
+			sb.append("%");
+			sb.append(temp);
+		}
+		return sb.toString();
+	}
+	
 	public static byte[] encryptByPublicKey(byte[] plainData, PublicKey publicKey)
             throws Exception {
         Cipher cipher = Cipher.getInstance(publicKey.getAlgorithm());
